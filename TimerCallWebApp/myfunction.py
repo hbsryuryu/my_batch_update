@@ -1,11 +1,4 @@
 import os
-from dotenv import load_dotenv
-load_dotenv(override=True)
-
-
-
-
-
 import stripe
 
 STRIPE_SECRET = os.environ["STRIPE_SECRET"]
