@@ -83,7 +83,7 @@ def stripe_paymentLink_modify(payment_link_id:str,remaining_days:int):
 def my_function():
     payment_links = stripe_paymentLink_get_list()
     payment_links_ids_trial_period_days_tuple = [
-        (_p.id,_p.subscription_data,_p["metadata"].get(TIME_META_TAG,None))
+        (_p.id,_p.subscription_data,_p["metadata"].to_dict().get(TIME_META_TAG,None))
         for _p in payment_links.data
     ]
     # subscription_dataのアクセス先はsubscription_data.trial_period_days
