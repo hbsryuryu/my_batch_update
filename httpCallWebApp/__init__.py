@@ -1,14 +1,8 @@
 import azure.functions as func
 import json
 
-app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 
-
-# @app.route(route="test", methods=["GET"])
-
-@app.route(route="httpCallWebApp")
-def get_chats(req: func.HttpRequest) -> func.HttpResponse:
-    # func.HttpResponse("Invalid JSON in request body.", status_code=400)
+def main(req: func.HttpRequest) -> func.HttpResponse:
     test_id = req.params.get("test_id")
 
     result_json = {"tests": [test_id]}
