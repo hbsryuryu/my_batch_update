@@ -1,5 +1,6 @@
 import azure.functions as func
 import json
+import traceback
 
 # ----------------------------------
 
@@ -138,10 +139,18 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     
 
     # result_json = {"tests": [test_id]}
+    error_msg = ""
+    my_function_array = []
+    try:
+        my_function_array = my_function()
+    except:
+        error_msg = f"以下エラー内容:\n{traceback.format_exc()}"
+
     result_json = {
         "key":STRIPE_SECRET[:3],
         "tests": [test_id],
-        "ids": my_function() # payment_links_ids_trial_period_days_tuple
+        "ids": my_function_array, # payment_links_ids_trial_period_days_tuple
+        "error_msg":error_msg
 
     }
     return func.HttpResponse(
