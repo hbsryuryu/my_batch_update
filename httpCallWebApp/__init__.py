@@ -86,6 +86,8 @@ def stripe_paymentLink_modify(payment_link_id:str,remaining_days:int):
 
 
 def my_function():
+    res_array = []
+
     payment_links = stripe_paymentLink_get_list()
     payment_links_ids_trial_period_days_tuple = [
         (_p.id,_p.subscription_data,_p["metadata"].get(TIME_META_TAG,None))
@@ -107,9 +109,11 @@ def my_function():
             if target_days == 0:
                 target_days = None # 0日指定は対応してない
             if target_days and current_days:
-                res_data = stripe_paymentLink_modify(target_id,target_days) # 無料トライアルが設定されているかつ更新が必要なものだけリクエスト
+                res_array.append(target_days)
+                # res_data = stripe_paymentLink_modify(target_id,target_days) # 無料トライアルが設定されているかつ更新が必要なものだけリクエスト
 
-    return None
+
+    return res_array
 
 # ----------------------------------
 
@@ -126,17 +130,18 @@ def my_function():
 def main(req: func.HttpRequest) -> func.HttpResponse:
     test_id = req.params.get("test_id")
 
-    payment_links = stripe_paymentLink_get_list()
-    payment_links_ids_trial_period_days_tuple = [
-        _p.id
-        for _p in payment_links.data
-    ]
+    # payment_links = stripe_paymentLink_get_list()
+    # payment_links_ids_trial_period_days_tuple = [
+    #     _p.id
+    #     for _p in payment_links.data
+    # ]
+    
 
     # result_json = {"tests": [test_id]}
     result_json = {
         "key":STRIPE_SECRET[:3],
         "tests": [test_id],
-        "ids":payment_links_ids_trial_period_days_tuple
+        "ids": my_function() # payment_links_ids_trial_period_days_tuple
 
     }
     return func.HttpResponse(
